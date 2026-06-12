@@ -22,8 +22,7 @@ export default function Hero() {
         </div>
 
         <p className="hero-bio">
-          From AI-powered tools for programmers to Chrome extensions downloaded by hundreds of users, 
-          I focus on solving real problems with clean and functional solutions. I work across the MERN stack, 
+          I work across the MERN stack, 
           handling everything from UI to backend architecture and deployment. My goal is to create tools that 
           people actually use.
         </p>
@@ -68,7 +67,7 @@ export default function Hero() {
       </div>
 
       <div className="hero-image">
-        <img src="/profile.png" alt="Preetham Maddula" />
+        <img src="/mikey.png" alt="Preetham Maddula" />
       </div>
     </section>
   );
