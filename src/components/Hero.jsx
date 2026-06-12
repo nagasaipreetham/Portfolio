@@ -1,0 +1,75 @@
+import { useTheme } from '../context/ThemeContext';
+import './Hero.css';
+
+export default function Hero() {
+  const { theme } = useTheme();
+
+  const isDark = theme === 'dark';
+
+  return (
+    <section className="hero-section">
+      <div className="hero-content">
+        <div className="available-pill">
+          <span className="glowing-dot"></span>
+          AVAILABLE FOR HIRE
+        </div>
+
+        <h1 className="hero-title">Preetham Maddula</h1>
+        
+        <div className="hero-subtitle-group">
+          <div className="hero-role">Full Stack Developer</div>
+          <div className="hero-caption">"Creating what I wish existed."</div>
+        </div>
+
+        <p className="hero-bio">
+          From AI-powered tools for programmers to Chrome extensions downloaded by hundreds of users, 
+          I focus on solving real problems with clean and functional solutions. I work across the MERN stack, 
+          handling everything from UI to backend architecture and deployment. My goal is to create tools that 
+          people actually use.
+        </p>
+
+        <div className="hero-social-icons">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="social-img-link">
+            <img src={isDark ? '/github-light.svg' : '/github-dark.svg'} alt="GitHub" className="social-img-icon" />
+          </a>
+          <a href="mailto:preetham@example.com" className="social-img-link">
+            <img src={isDark ? '/gmail-cleaner-light.svg' : '/gmail-cleaner-dark.svg'} alt="Gmail" className="social-img-icon" />
+          </a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-img-link">
+            <img src={isDark ? '/linkedin-light.svg' : '/linkedin-dark.svg'} alt="LinkedIn" className="social-img-icon" />
+          </a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="social-img-link">
+            <img src={isDark ? '/x-light.svg' : '/x-dark.svg'} alt="X" className="social-img-icon" />
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-img-link">
+            <img src={isDark ? '/instagram-light.svg' : '/instagram-dark.svg'} alt="Instagram" className="social-img-icon" />
+          </a>
+        </div>
+
+        <div className="hero-actions">
+          <a href="#contact" className="btn btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+            </svg>
+            Get in touch
+          </a>
+          <a href="#resume" className="btn btn-outline">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
+              <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
+              <path d="M10 9H8"></path>
+              <path d="M16 13H8"></path>
+              <path d="M16 17H8"></path>
+            </svg>
+            Resume
+          </a>
+        </div>
+      </div>
+
+      <div className="hero-image">
+        <img src="/profile.png" alt="Preetham Maddula" />
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,159 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 32px;
+  position: relative;
+  z-index: 10;
+}
+
+.nav-left, .nav-center, .nav-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-left {
+  gap: 16px;
+  flex: 1;
+}
+
+.nav-center {
+  gap: 24px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-right {
+  gap: 16px;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--accent-color);
+}
+
+.location-badge {
+  font-size: 0.85rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.location-pin-icon {
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: opacity 0.2s;
+  opacity: 0.8;
+}
+
+.nav-link:hover {
+  opacity: 1;
+}
+
+.search-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.search-btn:hover {
+  opacity: 1;
+}
+
+.cmd-k {
+  font-family: monospace;
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+
+.theme-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  outline: none;
+  position: relative;
+  overflow: hidden;
+  width: 36px;
+  height: 36px;
+}
+
+/* Ensure there is no background, border, or hover background */
+.theme-toggle:hover,
+.theme-toggle:focus {
+  background: transparent;
+  outline: none;
+}
+
+.icon-container {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icon {
+  position: absolute;
+  transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Initial states */
+.icon-container.dark .moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.5);
+}
+
+.icon-container.dark .sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+.icon-container.light .sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.5);
+}
+
+.icon-container.light .moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+  .nav-center {
+    display: none;
+  }
+  .search-btn {
+    display: none;
+  }
+}

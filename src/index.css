@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* We will use Vanilla CSS mostly, but define our custom variables */
+:root {
+  --bg-color: #f2efeb;
+  --text-color: #1a1a1a;
+  --grid-color: rgba(0, 0, 0, 0.04);
+  --border-color: rgba(0, 0, 0, 0.1);
+  --separator-color: rgba(0, 0, 0, 0.15);
+  --accent-color: #4a56e2; /* Blueish accent */
+}
+
+.dark {
+  --bg-color: #1a1a1a;
+  --text-color: #e5e5e5;
+  --grid-color: rgba(255, 255, 255, 0.03);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --separator-color: rgba(255, 255, 255, 0.12);
+  --accent-color: #6366f1; /* Lighter blue accent */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Space Grotesk", sans-serif;
+  font-optical-sizing: auto;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0s, color 0s;
+  
+  /* Background grid */
+  background-image: 
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 150px 150px;
+  background-position: center top;
+}
+
+/* View Transitions for Theme Toggle */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-new(root) {
+  animation: clip-expand 0.7s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+  z-index: 9999;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+@keyframes clip-expand {
+  0% {
+    clip-path: circle(0px at var(--click-x, 50%) var(--click-y, 50%));
+  }
+  100% {
+    clip-path: circle(150vw at var(--click-x, 50%) var(--click-y, 50%));
+  }
+}
+
+.layout-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: var(--bg-color); /* Opaque middle section */
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Disable grid for small screens where layout takes full width */
+@media (max-width: 1000px) {
+  .layout-container {
+    border-left: none;
+    border-right: none;
+  }
+  body {
+    background-image: none; /* Hide background grid on mobile completely */
+  }
+}
+
+/* Banner Image Styles */
+.hero-banner-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 350px;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.6;
+}
+
+.hero-banner-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent 0%, var(--bg-color) 100%);
+}
+
+/* Faint About Separator */
+.section-separator {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 32px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-color);
+  opacity: 0.5;
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-color);
+}
+
