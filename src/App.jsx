@@ -1,6 +1,8 @@
 import Navbar from './components/Navbar';
 import Separator from './components/Separator';
 import Hero from './components/Hero';
+import About from './components/About';
+import SkillStack from './components/SkillStack';
 
 function App() {
   return (
@@ -23,10 +25,18 @@ function App() {
           <Separator />
         </div>
         
-        {/* Faint ABOUT separator */}
+        <About />
+
+        {/* SKILL STACK divider */}
         <div className="section-separator">
-          <span className="section-label">ABOUT</span>
+          <span className="section-label">SKILL STACK</span>
           <div className="section-line"></div>
+        </div>
+
+        <SkillStack />
+
+        <div className="separator-full-width">
+          <Separator />
         </div>
       </main>
     </div>

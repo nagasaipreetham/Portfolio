@@ -11,6 +11,8 @@
   --separator-color: rgba(0, 0, 0, 0.15);
   --accent-color: #4a56e2; /* Blueish accent */
   --nav-bg-scrolled: rgba(242, 239, 235, 0.85);
+  --skill-icon-color: #30302F;
+  --skill-icon-hover: #000000;
 }
 
 .dark {
@@ -21,6 +23,8 @@
   --separator-color: rgba(255, 255, 255, 0.12);
   --accent-color: #6366f1; /* Lighter blue accent */
   --nav-bg-scrolled: rgba(26, 26, 26, 0.85);
+  --skill-icon-color: #D1D1D1;
+  --skill-icon-hover: #ffffff;
 }
 
 * {

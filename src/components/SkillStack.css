@@ -1,0 +1,96 @@
+.skills-section {
+  padding: 0 32px 60px;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.skill-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: transparent;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+.skill-item:hover {
+  transform: translateY(-4px);
+}
+
+.skill-logo-img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+}
+
+/* Styled custom tooltip on top */
+.skill-item::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.skill-item::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--text-color) transparent transparent transparent;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 10;
+}
+
+.skill-item:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.skill-item:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(8px);
+}
+
+/* Responsiveness */
+@media (max-width: 768px) {
+  .skills-section {
+    padding: 0 16px 40px;
+  }
+  .skills-list {
+    gap: 16px 20px;
+  }
+  .skill-item {
+    padding: 8px;
+  }
+  .skill-logo-img {
+    width: 32px;
+    height: 32px;
+  }
+}
