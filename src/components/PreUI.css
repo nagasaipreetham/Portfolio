@@ -1,0 +1,54 @@
+/* ═══════════════════════════════════════════════════════════
+   PRE UI — Placeholder section below the Works experience
+═══════════════════════════════════════════════════════════ */
+
+.preui-section {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(128, 128, 128, 0.12);
+  position: relative;
+}
+
+.preui-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+  user-select: none;
+}
+
+.preui-badge {
+  display: inline-block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-color);
+  opacity: 0.3;
+  padding: 5px 14px;
+  border: 1px solid currentColor;
+  border-radius: 100px;
+}
+
+.preui-heading {
+  font-size: clamp(4rem, 12vw, 10rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  margin: 0;
+  color: var(--text-color);
+  opacity: 0.06;
+}
+
+.preui-sub {
+  font-size: 0.78rem;
+  color: var(--text-color);
+  opacity: 0.25;
+  letter-spacing: 0.04em;
+  margin: 0;
+}

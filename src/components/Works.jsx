@@ -59,52 +59,103 @@ const PROJECTS = [
 ];
 
 export default function Works() {
-  const sectionRef = useRef(null);
-  const curtainTopRef = useRef(null);
-  const curtainBottomRef = useRef(null);
-  const galleryTrackRef = useRef(null);
+  const sectionRef          = useRef(null);
+  const curtainTopRef       = useRef(null);   // used for BOTH open AND close
+  const curtainBottomRef    = useRef(null);   // used for BOTH open AND close
+  const galleryTrackRef     = useRef(null);
+  const galleryContainerRef = useRef(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const curtainTop = curtainTopRef.current;
-    const curtainBottom = curtainBottomRef.current;
-    const track = galleryTrackRef.current;
+    const section          = sectionRef.current;
+    const curtainTop       = curtainTopRef.current;
+    const curtainBottom    = curtainBottomRef.current;
+    const track            = galleryTrackRef.current;
+    const galleryContainer = galleryContainerRef.current;
 
     const ctx = gsap.context(() => {
-      // Compute how far the gallery needs to scroll horizontally
+      /* ── How far the gallery must slide (px) ─────────────────── */
       const getGalleryDist = () =>
         Math.max(0, track.scrollWidth - window.innerWidth);
 
-      // ── Master Timeline ──────────────────────────────
-      // Total normalised duration = 1.0
-      //  Phase 1 → [0.00 – 0.35] Curtains split open
-      //  Phase 2 → [0.35 – 1.00] Gallery slides horizontally
-      const tl = gsap.timeline({ defaults: { ease: 'none' } });
+      /* ── High-perf setters (created once, used every tick) ───── */
+      const setCurtainTopY    = gsap.quickSetter(curtainTop,       'yPercent');
+      const setCurtainBottomY = gsap.quickSetter(curtainBottom,    'yPercent');
+      const setTrackX         = gsap.quickSetter(track,            'x', 'px');
+      const setGalleryOp      = gsap.quickSetter(galleryContainer, 'opacity');
 
-      tl.to(curtainTop, { yPercent: -100, duration: 0.35 }, 0)
-        .to(curtainBottom, { yPercent: 100, duration: 0.35 }, 0)
-        .to(
-          track,
-          {
-            x: () => -getGalleryDist(),
-            duration: 0.65,
-            ease: 'none',
-          },
-          0.35
-        );
-
-      // ── ScrollTrigger ────────────────────────────────
-      // Total scroll distance so the gallery phase (65 %) covers every pixel
-      // of the horizontal track:  totalScroll = G / 0.65
+      /* ── Scroll phase map (progress 0 → 1) ───────────────────────
+       *
+       *  [0.00 – 0.25]  Phase 1 — curtains split OUTWARD
+       *  [0.25 – 0.68]  Phase 2 — gallery scrolls horizontally
+       *  [0.68 – 0.78]  Phase 3 — gallery dims
+       *  [0.74 – 0.92]  Phase 4 — SAME curtains return INWARD (close)
+       *  [0.92 – 1.00]  Phase 5 — hold sealed, then natural unpin
+       *
+       *  end = max(innerHeight×2,  galleryDist / 0.43)
+       *    → gallery phase (43 % of progress) = exactly galleryDist px
+       * ─────────────────────────────────────────────────────────── */
       ScrollTrigger.create({
         trigger: section,
         start: 'top top',
-        end: () => `+=${Math.round(getGalleryDist() / 0.65)}`,
+        end: () =>
+          `+=${Math.max(
+            window.innerHeight * 2,
+            Math.round(getGalleryDist() / 0.43)
+          )}`,
         pin: true,
-        scrub: 1.2,
+        scrub: 1.5,
         anticipatePin: 1,
         invalidateOnRefresh: true,
-        animation: tl,
+
+        onUpdate(self) {
+          const p = self.progress;
+          const G = getGalleryDist();
+
+          /* ── Curtains: Phase 1 (open) + Phase 4 (close) ─────────
+           *
+           * THE SAME top and bottom panels drive both directions.
+           *
+           * Phase 1 (0.00 → 0.25):
+           *   top    yPercent  0 → -100  (slides UP out of screen)
+           *   bottom yPercent  0 → +100  (slides DOWN out of screen)
+           *
+           * Phase 4 (0.74 → 0.92):
+           *   top    yPercent -100 → 0   (returns DOWN, seals section)
+           *   bottom yPercent +100 → 0   (returns UP,  seals section)
+           *
+           * Between (0.25 – 0.74): curtains parked fully open (-100/+100)
+           * ─────────────────────────────────────────────────────── */
+          let topY, bottomY;
+
+          if (p <= 0.25) {
+            // Phase 1 — opening
+            const t = p / 0.25;
+            topY    = t * -100;
+            bottomY = t *  100;
+          } else if (p >= 0.74) {
+            // Phase 4 — closing (same curtains, reversed direction)
+            const t = Math.min(1, (p - 0.74) / 0.18);
+            topY    = -100 + t * 100;   //  -100 → 0
+            bottomY =  100 - t * 100;   //  +100 → 0
+          } else {
+            // Phases 2 & 3 — curtains fully open
+            topY    = -100;
+            bottomY =  100;
+          }
+
+          setCurtainTopY(topY);
+          setCurtainBottomY(bottomY);
+
+          /* ── Phase 2: gallery scrolls (0.25 → 0.68) ──────────── */
+          const galleryP = Math.max(0, Math.min(1, (p - 0.25) / 0.43));
+          setTrackX(-G * galleryP);
+
+          /* ── Phase 3: gallery dims (0.68 → 0.78) ─────────────── */
+          const dimP = Math.max(0, Math.min(1, (p - 0.68) / 0.10));
+          setGalleryOp(1 - 0.88 * dimP);
+
+          /* Phase 5 (0.92 → 1.00): no-op — curtains shut at topY=0 */
+        },
       });
     }, section);
 
@@ -113,25 +164,24 @@ export default function Works() {
 
   return (
     <section className="works-section" ref={sectionRef} id="projects">
-      {/* ── Top Curtain ──────────────────────────── */}
+
+      {/* ── Curtains (open on entry, close on exit) ──────────── */}
       <div className="curtain curtain-top" ref={curtainTopRef}>
         <h2 className="works-title">WORKS</h2>
       </div>
 
-      {/* ── Bottom Curtain ───────────────────────── */}
       <div className="curtain curtain-bottom" ref={curtainBottomRef}>
         <h2 className="works-title">WORKS</h2>
       </div>
 
-      {/* ── Gallery ──────────────────────────────── */}
-      <div className="gallery-container">
-        {/* Top-left section label */}
+      {/* ── Gallery ──────────────────────────────────────────── */}
+      <div className="gallery-container" ref={galleryContainerRef}>
+
         <div className="gallery-meta">
           <span className="gallery-label">SELECTED WORKS</span>
           <span className="gallery-count">05 PROJECTS</span>
         </div>
 
-        {/* Horizontal track */}
         <div className="gallery-track" ref={galleryTrackRef}>
           <div className="gallery-pad" aria-hidden="true" />
 
@@ -141,7 +191,6 @@ export default function Works() {
               className="project-card"
               style={{ '--card-hue': project.hue }}
             >
-              {/* Abstract visual area */}
               <div className="card-visual">
                 <div className="card-glow" />
                 <div className="card-grid" />
@@ -150,7 +199,6 @@ export default function Works() {
                 </span>
               </div>
 
-              {/* Text body */}
               <div className="card-body">
                 <div className="card-header">
                   <span className="card-id">{project.id}</span>
@@ -166,9 +214,7 @@ export default function Works() {
                 <div className="card-bottom">
                   <div className="card-stack">
                     {project.stack.map((tag) => (
-                      <span key={tag} className="stack-pill">
-                        {tag}
-                      </span>
+                      <span key={tag} className="stack-pill">{tag}</span>
                     ))}
                   </div>
                   <a
@@ -199,7 +245,6 @@ export default function Works() {
           <div className="gallery-pad" aria-hidden="true" />
         </div>
 
-        {/* Scroll hint — visible while curtains are still open */}
         <div className="scroll-cue" aria-hidden="true">
           <svg
             xmlns="http://www.w3.org/2000/svg"

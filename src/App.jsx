@@ -10,6 +10,7 @@ import About from './components/About';
 import SkillStack from './components/SkillStack';
 import Sponsorship from './components/Sponsorship';
 import Works from './components/Works';
+import PreUI from './components/PreUI';
 
 // Register ScrollTrigger once at module level so Works.jsx can also rely on it
 gsap.registerPlugin(ScrollTrigger);
@@ -88,6 +89,9 @@ function App() {
 
       {/* ── Works — full-width, outside the 1000 px column ─────── */}
       <Works />
+
+      {/* ── PreUI placeholder — sits below Works ──────────────── */}
+      <PreUI />
     </>
   );
 }

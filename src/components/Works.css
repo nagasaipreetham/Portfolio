@@ -392,7 +392,7 @@
   }
 
   .card-desc {
-    display: none; /* hide description on very narrow cards */
+    display: none;
   }
 
   .gallery-meta {
@@ -410,3 +410,4 @@
     font-size: clamp(5rem, 22vw, 8rem);
   }
 }
+
