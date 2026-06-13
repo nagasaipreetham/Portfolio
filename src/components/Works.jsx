@@ -73,6 +73,8 @@ export default function Works() {
     const galleryContainer = galleryContainerRef.current;
 
     const ctx = gsap.context(() => {
+      const PAUSE_PX = 100;
+
       /* ── How far the gallery must slide (px) ─────────────────── */
       const getGalleryDist = () =>
         Math.max(0, track.scrollWidth - window.innerWidth);
@@ -83,6 +85,19 @@ export default function Works() {
       const setTrackX         = gsap.quickSetter(track,            'x', 'px');
       const setGalleryOp      = gsap.quickSetter(galleryContainer, 'opacity');
 
+      const navbar = document.querySelector('.navbar');
+      const setNavbarOp = navbar ? gsap.quickSetter(navbar, 'opacity') : () => {};
+      const setNavbarY = navbar ? gsap.quickSetter(navbar, 'y', 'px') : () => {};
+
+      let navbarVisible = true;
+      const setNavbarPointerEvents = (visible) => {
+        if (!navbar) return;
+        if (visible !== navbarVisible) {
+          navbar.style.pointerEvents = visible ? 'auto' : 'none';
+          navbarVisible = visible;
+        }
+      };
+
       /* ── Scroll phase map (progress 0 → 1) ───────────────────────
        *
        *  [0.00 – 0.25]  Phase 1 — curtains split OUTWARD
@@ -90,18 +105,15 @@ export default function Works() {
        *  [0.68 – 0.78]  Phase 3 — gallery dims
        *  [0.74 – 0.92]  Phase 4 — SAME curtains return INWARD (close)
        *  [0.92 – 1.00]  Phase 5 — hold sealed, then natural unpin
-       *
-       *  end = max(innerHeight×2,  galleryDist / 0.43)
-       *    → gallery phase (43 % of progress) = exactly galleryDist px
        * ─────────────────────────────────────────────────────────── */
       ScrollTrigger.create({
         trigger: section,
         start: 'top top',
-        end: () =>
-          `+=${Math.max(
-            window.innerHeight * 2,
-            Math.round(getGalleryDist() / 0.43)
-          )}`,
+        end: () => {
+          const G = getGalleryDist();
+          const S_base = Math.max(window.innerHeight * 2, Math.round(G / 0.43));
+          return `+=${Math.round(0.94 * S_base + PAUSE_PX)}`;
+        },
         pin: true,
         scrub: 1.5,
         anticipatePin: 1,
@@ -110,56 +122,94 @@ export default function Works() {
         onUpdate(self) {
           const p = self.progress;
           const G = getGalleryDist();
+          const S_base = Math.max(window.innerHeight * 2, Math.round(G / 0.43));
+          const S = Math.round(0.94 * S_base + PAUSE_PX);
+
+          const currentScroll = p * S;
+
+          // Define pixel boundaries for each phase
+          const p1_end = 0.25 * S_base;
+          const p2_end = p1_end + 0.43 * S_base;
+          const pause_end = p2_end + PAUSE_PX;
+          const p4_end = pause_end + 0.18 * S_base;
 
           /* ── Curtains: Phase 1 (open) + Phase 4 (close) ─────────
            *
            * THE SAME top and bottom panels drive both directions.
            *
-           * Phase 1 (0.00 → 0.25):
+           * Phase 1 (0.00 → p1_end):
            *   top    yPercent  0 → -100  (slides UP out of screen)
            *   bottom yPercent  0 → +100  (slides DOWN out of screen)
            *
-           * Phase 4 (0.74 → 0.92):
+           * Pause (p2_end → pause_end):
+           *   curtains remain fully open (-100/+100) for exactly 100px.
+           *
+           * Phase 4 (pause_end → p4_end):
            *   top    yPercent -100 → 0   (returns DOWN, seals section)
            *   bottom yPercent +100 → 0   (returns UP,  seals section)
-           *
-           * Between (0.25 – 0.74): curtains parked fully open (-100/+100)
            * ─────────────────────────────────────────────────────── */
           let topY, bottomY;
+          let navOp, navY;
 
-          if (p <= 0.25) {
+          if (currentScroll <= p1_end) {
             // Phase 1 — opening
-            const t = p / 0.25;
+            const t = p1_end > 0 ? Math.max(0, Math.min(1, currentScroll / p1_end)) : 1;
             topY    = t * -100;
             bottomY = t *  100;
-          } else if (p >= 0.74) {
+            
+            navOp   = 1 - t;
+            navY    = t * -50;
+            setNavbarPointerEvents(t < 0.8);
+          } else if (currentScroll >= pause_end) {
             // Phase 4 — closing (same curtains, reversed direction)
-            const t = Math.min(1, (p - 0.74) / 0.18);
+            const closeDist = p4_end - pause_end;
+            const t = closeDist > 0 ? Math.max(0, Math.min(1, (currentScroll - pause_end) / closeDist)) : 1;
             topY    = -100 + t * 100;   //  -100 → 0
             bottomY =  100 - t * 100;   //  +100 → 0
+
+            navOp   = t;
+            navY    = -50 + t * 50;
+            setNavbarPointerEvents(t > 0.2);
           } else {
-            // Phases 2 & 3 — curtains fully open
+            // Phases 2 & 3 & pause — curtains fully open
             topY    = -100;
             bottomY =  100;
+
+            navOp   = 0;
+            navY    = -50;
+            setNavbarPointerEvents(false);
           }
 
           setCurtainTopY(topY);
           setCurtainBottomY(bottomY);
 
-          /* ── Phase 2: gallery scrolls (0.25 → 0.68) ──────────── */
-          const galleryP = Math.max(0, Math.min(1, (p - 0.25) / 0.43));
+          setNavbarOp(navOp);
+          setNavbarY(navY);
+
+          /* ── Phase 2: gallery scrolls (p1_end → p2_end) ──────── */
+          const scrollDist = 0.43 * S_base;
+          const galleryP = scrollDist > 0 ? Math.max(0, Math.min(1, (currentScroll - p1_end) / scrollDist)) : 1;
           setTrackX(-G * galleryP);
 
-          /* ── Phase 3: gallery dims (0.68 → 0.78) ─────────────── */
-          const dimP = Math.max(0, Math.min(1, (p - 0.68) / 0.10));
+          /* ── Phase 3: gallery dims (p2_end → p2_end + dimDuration) ─ */
+          const dimDuration = 0.10 * S_base;
+          const dimP = dimDuration > 0 ? Math.max(0, Math.min(1, (currentScroll - p2_end) / dimDuration)) : 1;
           setGalleryOp(1 - 0.88 * dimP);
 
-          /* Phase 5 (0.92 → 1.00): no-op — curtains shut at topY=0 */
+          /* Phase 5 (p4_end → S): no-op — curtains shut at topY=0 */
         },
       });
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      const navbar = document.querySelector('.navbar');
+      if (navbar) {
+        navbar.style.opacity = '';
+        navbar.style.transform = '';
+        navbar.style.pointerEvents = '';
+      }
+    };
   }, []);
 
   return (

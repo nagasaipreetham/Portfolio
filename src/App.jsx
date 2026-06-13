@@ -39,6 +39,8 @@ function App() {
 
   return (
     <>
+      <Navbar />
+
       {/* ── Constrained centre column (existing sections) ─────── */}
       <div className="layout-container">
         <div className="hero-banner-wrapper">
@@ -46,7 +48,7 @@ function App() {
           <div className="hero-banner-fade"></div>
         </div>
 
-        <Navbar />
+        <div className="nav-placeholder" />
 
         <div className="separator-full-width">
           <Separator />
@@ -90,8 +92,15 @@ function App() {
       {/* ── Works — full-width, outside the 1000 px column ─────── */}
       <Works />
 
-      {/* ── PreUI placeholder — sits below Works ──────────────── */}
-      <PreUI />
+      {/* ── Standard middle column pattern resumes below Works ──── */}
+      <div className="layout-container">
+        <div className="separator-full-width">
+          <Separator />
+        </div>
+        <main>
+          <PreUI />
+        </main>
+      </div>
     </>
   );
 }
