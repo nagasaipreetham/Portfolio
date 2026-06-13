@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
-   CONTACT NOW SECTION
-   Clean, award-winning minimalist call-to-action
+   CONTACT SECTION REDESIGN
+   Cinematic layout matching the shubhamsingh design
    ═══════════════════════════════════════════════════════════ */
 
 .contact-section {
@@ -9,119 +9,206 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 100px 32px;
+  padding: 40px 32px 20px;
   position: relative;
 }
 
 .contact-inner {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  text-align: center;
-  max-width: 600px;
+  align-items: flex-start;
+  text-align: left;
+  max-width: 800px;
   width: 100%;
-  user-select: none;
 }
 
-.contact-badge {
-  display: inline-block;
-  font-size: 0.65rem;
+/* Subtitle at the top (long text from user) */
+.contact-sub {
+  font-size: 0.72rem;
+  line-height: 1.6;
   font-weight: 700;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent-color);
-  padding: 6px 16px;
-  border: 1px solid var(--accent-color);
-  border-radius: 100px;
+  color: var(--text-color);
+  opacity: 0.45;
+  margin: 0;
+  max-width: 700px;
 }
 
-.contact-heading {
-  font-size: clamp(2.5rem, 7vw, 4.5rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
+/* Ensure no gap between the two tagline sentences */
+.contact-sub + .contact-sub {
+  margin-top: 0;
+}
+
+/* Add margin only at the end of the tagline list */
+.contact-sub:last-of-type {
+  margin-bottom: 24px;
+}
+
+/* Hover-trigger container around email & message link */
+.contact-email-trigger {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: fit-content;
+  text-decoration: none;
+}
+
+/* Giant Email Address */
+.contact-email {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: clamp(1.8rem, 5.2vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
   line-height: 1.1;
-  margin: 0;
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 4px;
+  transition: opacity 0.3s ease;
+}
+
+/* Username vs Domain Colors */
+.email-user {
   color: var(--text-color);
 }
 
-.contact-sub {
-  font-size: 0.95rem;
-  line-height: 1.6;
+.email-domain {
+  color: var(--text-color);
+  opacity: 0.45;
+}
+
+/* Comet Trail underline wrapper (layout-stable space holder) */
+.email-underline-wrapper {
+  width: 100%;
+  height: 2px;
+  margin: 8px 0 16px;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--border-color); /* Matches theme's grid/border line */
+  opacity: 0.2;
+  transition: opacity 0.3s ease;
+}
+
+/* Comet Trail actual line (sep-67 adapted for theme-compatibility) */
+.email-underline {
+  position: absolute;
+  top: 0;
+  left: -30%;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(
+    90deg, 
+    transparent, 
+    rgba(128, 128, 128, 0.4), 
+    var(--text-color), 
+    rgba(128, 128, 128, 0.4), 
+    transparent
+  );
+}
+
+/* Active Comet Trail animation when parent is hovered */
+.contact-email-trigger:hover .email-underline-wrapper {
+  opacity: 1;
+}
+
+.contact-email-trigger:hover .email-underline {
+  animation: cometFly 1.8s ease-in-out infinite;
+}
+
+@keyframes cometFly {
+  from { left: -30%; }
+  to { left: 130%; }
+}
+
+/* Send a message link */
+.contact-message-link {
+  text-decoration: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   color: var(--text-color);
   opacity: 0.6;
-  margin: 0 0 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  margin-top: 4px;
 }
 
-.contact-ctas {
+.contact-message-link .arrow {
+  transition: transform 0.2s ease;
+}
+
+.contact-email-trigger:hover .contact-message-link {
+  opacity: 1;
+}
+
+.contact-email-trigger:hover .contact-message-link .arrow {
+  transform: translate(2px, -2px);
+}
+
+/* Centered divider with border lines */
+.contact-divider {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 24px;
   width: 100%;
-  margin-top: 10px;
+  margin: 50px 0 30px;
 }
 
-.contact-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  text-decoration: none;
-  font-family: inherit;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--bg-color);
-  background-color: var(--text-color);
-  padding: 14px 28px;
-  border-radius: 100px;
-  border: 1px solid var(--text-color);
-  transition: 
-    background-color 0.3s ease, 
-    color 0.3s ease, 
-    border-color 0.3s ease,
-    transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+.contact-divider::before,
+.contact-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-color);
 }
 
-.contact-btn:hover {
-  background-color: transparent;
+.contact-divider-text {
+  padding: 0 24px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   color: var(--text-color);
-  border-color: var(--text-color);
-  transform: translateY(-2px);
+  opacity: 0.35;
+  white-space: nowrap;
 }
 
-.btn-arrow {
-  transition: transform 0.3s ease;
-}
-
-.contact-btn:hover .btn-arrow {
-  transform: translateX(4px);
-}
-
-.social-links {
+/* Social links wrapping grid */
+.social-links-grid {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-top: 10px;
+  align-items: center;
+  gap: 40px;
   flex-wrap: wrap;
+  width: 100%;
+  padding: 0 16px;
 }
 
 .social-link {
   text-decoration: none;
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   color: var(--text-color);
-  opacity: 0.7;
-  transition: opacity 0.2s ease, color 0.2s ease;
+  opacity: 0.5;
+  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
 .social-link:hover {
   opacity: 1;
   color: var(--accent-color);
+  transform: translateY(-1px);
 }
 
-.social-dot {
-  font-size: 0.85rem;
-  color: var(--text-color);
-  opacity: 0.25;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 40px 20px 20px;
+  }
+  .contact-divider {
+    margin: 40px 0 30px;
+  }
+  .social-links-grid {
+    gap: 24px 32px;
+  }
 }
