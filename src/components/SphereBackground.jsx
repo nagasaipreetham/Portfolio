@@ -67,6 +67,10 @@ export default function SphereBackground() {
       mesh2.rotation.y = t * 0.2;
       mesh2.rotation.x = t * 0.1;
 
+      // Adjust camera distance for mobile responsiveness
+      const isMobile = window.innerWidth <= 768;
+      camera.position.z = isMobile ? 80 : 50;
+
       t += 0.015;
       renderer.render(scene, camera);
     };
@@ -97,5 +101,5 @@ export default function SphereBackground() {
     };
   }, []);
 
-  return <div ref={mountRef} style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }} />;
+  return <div ref={mountRef} style={{ width: '100%', height: '100%', pointerEvents: 'none' }} />;
 }

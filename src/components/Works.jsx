@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import { useTheme } from '../context/ThemeContext';
 import GalaxyBackground from './GalaxyBackground';
 import SphereBackground from './SphereBackground';
 import './Works.css';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 const PROJECTS = [
   {
@@ -120,14 +121,23 @@ export default function Works() {
           const factor = Math.min(1, dist / maxDist);
 
           const scale = 1.0 - factor * 0.22;   // 1.0 -> 0.78
-          const opacity = 1.0 - factor * 0.7;  // 1.0 -> 0.3
+          const dimmerOpacity = factor * 0.7;  // 0.0 -> 0.7 (dimmer overlay fades content)
 
+          // Scale the outer card container
           gsap.set(card, {
             scale: scale,
-            opacity: opacity,
             transformOrigin: 'center center',
             overwrite: 'auto',
           });
+
+          // Set opacity of the card dimmer overlay to avoid changing card container opacity (which breaks backdrop-filter)
+          const dimmer = card.querySelector('.card-dimmer');
+          if (dimmer) {
+            gsap.set(dimmer, {
+              opacity: dimmerOpacity,
+              overwrite: 'auto',
+            });
+          }
         });
       };
 
@@ -226,6 +236,35 @@ export default function Works() {
 
         onRefresh() {
           updateFocus();
+        },
+
+        snap: {
+          snapTo: (value) => {
+            const G = getGalleryDist();
+            if (G <= 0) return value;
+            const S_base = Math.max(window.innerHeight * 2, Math.round(G / 0.43));
+            const S = Math.round(0.94 * S_base + PAUSE_PX);
+
+            const p1_end = 0.25 * S_base;
+            const p2_end = p1_end + 0.43 * S_base;
+            const scrollDist = 0.43 * S_base;
+
+            const pStart = p1_end / S;
+            const pEnd = p2_end / S;
+
+            // Snap only when scrolling horizontally in Phase 2
+            if (value > pStart && value < pEnd) {
+              const currentGalleryP = (value - pStart) / (scrollDist / S);
+              const cardCount = PROJECTS.length;
+              const index = Math.round(currentGalleryP * (cardCount - 1));
+              const snappedGalleryP = index / (cardCount - 1);
+              return pStart + snappedGalleryP * (scrollDist / S);
+            }
+            return value;
+          },
+          duration: { min: 0.2, max: 0.5 },
+          delay: 0.1, // Snap 100ms after scroll ends
+          ease: 'power2.out',
         }
       });
 
@@ -255,8 +294,15 @@ export default function Works() {
 
   return (
     <section className="works-section" ref={sectionRef} id="projects">
+      {/* Dynamic background color layer for stacking order */}
+      <div className="works-bg-layer" />
+
       {/* Dynamic 3D backgrounds rendering only when Works is active */}
-      {isActive && (isDark ? <GalaxyBackground /> : <SphereBackground />)}
+      {isActive && (
+        <div className="works-3d-bg">
+          {isDark ? <GalaxyBackground /> : <SphereBackground />}
+        </div>
+      )}
 
       {/* ── Curtains (open on entry, close on exit) ──────────── */}
       <div className="curtain curtain-top" ref={curtainTopRef}>
@@ -331,6 +377,9 @@ export default function Works() {
                     </a>
                   </div>
                 </div>
+
+                {/* Glassmorphism content dimmer to keep container opacity at 1.0 */}
+                <div className="card-dimmer" />
               </div>
             </article>
           ))}

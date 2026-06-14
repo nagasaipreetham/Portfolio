@@ -64,8 +64,14 @@ export default function GalaxyBackground() {
     const animate = () => {
       animationId = requestAnimationFrame(animate);
       t += 0.003;
-      camera.position.x = Math.sin(t) * 70;
-      camera.position.z = Math.cos(t) * 70;
+
+      const isMobile = window.innerWidth <= 768;
+      const cameraDistance = isMobile ? 120 : 70;
+      const cameraY = isMobile ? 50 : 30;
+
+      camera.position.x = Math.sin(t) * cameraDistance;
+      camera.position.y = cameraY;
+      camera.position.z = Math.cos(t) * cameraDistance;
       camera.lookAt(0, 0, 0);
       renderer.render(scene, camera);
     };
@@ -95,5 +101,5 @@ export default function GalaxyBackground() {
     };
   }, []);
 
-  return <div ref={mountRef} style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none' }} />;
+  return <div ref={mountRef} style={{ width: '100%', height: '100%', pointerEvents: 'none' }} />;
 }
