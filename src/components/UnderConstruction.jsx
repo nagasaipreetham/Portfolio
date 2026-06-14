@@ -1,6 +1,6 @@
 import { useRef, useMemo, useState, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, Stars } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
 import { useTheme } from '../context/ThemeContext'
 
@@ -1008,7 +1008,7 @@ function ConstructionBarrier({ position = [0, 0, 0], rotation = 0, length = 2 })
 
 // ─── Floating dust ────────────────────────────────────────────────────────────
 function DustParticles() {
-  const COUNT = 100
+  const COUNT = 30
   const ref = useRef()
   const { posArr, spd } = useMemo(() => {
     const pos = new Float32Array(COUNT * 3)
@@ -1097,8 +1097,6 @@ function Scene({ isDay }) {
           <pointLight position={[-3, 6, 0]} intensity={1.5} color="#a855f7" distance={12} />
         </>
       )}
-
-      {isDay ? null : <Stars radius={50} depth={25} count={800} factor={3} fade saturation={1} />}
 
       <Ground isDay={isDay} />
 
@@ -1264,6 +1262,8 @@ export default function ConstructionScene() {
   const { theme } = useTheme();
   const isDay = theme === 'light';
   const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -1274,10 +1274,27 @@ export default function ConstructionScene() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+
   const cameraPosition = isMobile ? [13.26, 8.3, 16.57] : [8.74, 6.32, 10.92];
 
   return (
-    <div className="preui-3d-scene" style={{
+    <div ref={containerRef} className="preui-3d-scene" style={{
       width: '100%',
       borderRadius: '0px',
       overflow: 'hidden',
@@ -1298,9 +1315,10 @@ export default function ConstructionScene() {
 
       <Canvas
         key={isMobile ? 'mobile' : 'desktop'}
-        shadows
+        shadows={isDay}
         camera={{ position: cameraPosition, fov: 55, near: 0.1, far: 100 }}
         gl={{ antialias: true, alpha: false }}
+        frameloop={isVisible ? 'always' : 'never'}
       >
         <Scene isDay={isDay} />
       </Canvas>
