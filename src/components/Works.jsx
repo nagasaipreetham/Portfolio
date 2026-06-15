@@ -293,7 +293,7 @@ export default function Works() {
         });
       }
     };
-  }, [isDark]);
+  }, []);
 
   return (
     <section className="works-section" ref={sectionRef} id="projects">
