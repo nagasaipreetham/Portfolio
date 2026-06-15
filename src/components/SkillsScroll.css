@@ -1,0 +1,101 @@
+/* ── Skills Scrolling Separator ── */
+
+.skills-scroll-container {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  border-top: 2px solid var(--separator-color);
+  border-bottom: 2px solid var(--separator-color);
+  background-color: var(--bg-color);
+  padding: 10px 0;
+  overflow: hidden;
+  display: flex;
+  user-select: none;
+  pointer-events: none;
+
+  /* Premium fade-out effect at the edges */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 15%,
+    black 85%,
+    transparent 100%
+  );
+}
+
+.skills-scroll-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: skillsMarqueeScroll 28s linear infinite;
+  will-change: transform;
+}
+
+.skills-scroll-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 48px; /* Dynamic horizontal gap between skills */
+  flex-shrink: 0;
+}
+
+.skills-scroll-logo {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  filter: grayscale(0%);
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.skills-scroll-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+/* Infinite right-to-left scrolling animation */
+@keyframes skillsMarqueeScroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Responsive Scaling */
+@media (max-width: 768px) {
+  .skills-scroll-container {
+    padding: 14px 0;
+  }
+  
+  .skills-scroll-item {
+    padding: 0 32px;
+    gap: 10px;
+  }
+
+  .skills-scroll-logo {
+    width: 22px;
+    height: 22px;
+  }
+
+  .skills-scroll-name {
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+  }
+}

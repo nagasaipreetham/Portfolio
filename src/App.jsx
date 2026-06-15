@@ -13,6 +13,7 @@ import Works from './components/Works';
 import PreUI from './components/PreUI';
 import Contact from './components/Contact';
 import GitHubGraph from './components/GitHubGraph';
+import SkillsScroll from './components/SkillsScroll';
 
 // Register ScrollTrigger once at module level so Works.jsx can also rely on it
 gsap.registerPlugin(ScrollTrigger);
@@ -108,9 +109,7 @@ function App() {
           
           <Contact />
 
-          <div className="separator-full-width">
-            <Separator />
-          </div>
+          <SkillsScroll />
 
           <GitHubGraph />
 
