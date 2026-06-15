@@ -1,0 +1,361 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   GITHUB GRAPH SECTION
+   Contribution heatmap — black/grey/white theme, dark & light compatible.
+
+   Color strategy:
+     Light mode → 5 shades of BLACK  (empty = lightest, max = darkest)
+     Dark  mode → 5 shades of WHITE  (empty = darkest,  max = lightest)
+
+   The .dark class is applied to <html> by ThemeContext, so .dark selectors
+   override the default (light) values exactly as the rest of the portfolio does.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Section wrapper ────────────────────────────────────────────────────── */
+
+.github-graph-section {
+  width: 100%;
+  padding: 40px 32px 48px;
+  background-color: var(--bg-color);
+  position: relative;
+  overflow: visible; /* allow tooltip to escape on desktop */
+}
+
+/* ── Header row: label (left) + commit count (right) ───────────────────── */
+
+.graph-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+  gap: 16px;
+}
+
+/* Matches the ".section-label" style used elsewhere in the portfolio */
+.graph-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-color);
+  opacity: 0.5;
+  white-space: nowrap;
+}
+
+/* Commit count — top-right, prominent but not noisy */
+.graph-total-count {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-color);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.graph-total-sub {
+  font-weight: 500;
+  opacity: 0.55;
+}
+
+/* ── Scroll wrapper (allows horizontal scroll on small screens) ─────────── */
+
+.graph-scroll-wrapper {
+  overflow-x: auto;
+  overflow-y: visible;
+  /* Hide scrollbar — matches global body scrollbar suppression */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* Slight bottom padding so the legend doesn't clip on mobile */
+  padding-bottom: 2px;
+}
+
+.graph-scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Inner flex column: month-row on top, body-row below ─────────────────── */
+
+.graph-inner {
+  display: inline-flex;   /* shrink-wrap to content width */
+  flex-direction: column;
+  gap: 4px;
+  min-width: min-content; /* never wraps — always one continuous row */
+}
+
+/* ── Month label row ─────────────────────────────────────────────────────── */
+
+.graph-month-row {
+  display: flex;
+  align-items: flex-end;
+}
+
+/* Transparent spacer that sits above the day-label column so month labels
+   line up perfectly with the cells to their right */
+.graph-day-label-spacer {
+  width: 32px;
+  flex-shrink: 0;
+}
+
+/* Relative container for absolutely-positioned month spans */
+.graph-month-labels {
+  position: relative;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.graph-month-label {
+  position: absolute;
+  top: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-color);
+  opacity: 0.5;
+  white-space: nowrap;
+  line-height: 18px;
+  pointer-events: none;
+}
+
+/* ── Body row: day labels + heatmap grid side by side ───────────────────── */
+
+.graph-body-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+/* Left column: Mon / Wed / Fri */
+.graph-day-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex-shrink: 0;
+  width: 28px;
+  padding-top: 0;
+}
+
+.graph-day-label {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-color);
+  opacity: 0.45;
+  /* Must match cell height (12px) so the labels align with the rows */
+  height: 12px;
+  line-height: 12px;
+  text-align: right;
+  padding-right: 4px;
+}
+
+/* ── Heatmap grid ─────────────────────────────────────────────────────────── */
+
+.graph-grid {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.graph-week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Base cell ─────────────────────────────────────────────────────────────── */
+
+.graph-cell {
+  width:  12px;
+  height: 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    opacity 0.12s ease,
+    outline-color 0.12s ease;
+}
+
+.graph-cell:hover {
+  opacity: 0.75;
+  outline: 1.5px solid var(--text-color);
+  outline-offset: 1px;
+}
+
+/* Empty placeholder — fully transparent, non-interactive */
+.graph-cell.graph-cell--empty {
+  background: transparent;
+  cursor: default;
+  pointer-events: none;
+  outline: none;
+}
+
+/* ── 5-level colour palette ──────────────────────────────────────────────
+   Light mode: 5 progressively darker shades of black
+   Dark  mode: 5 progressively lighter shades of white
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* LIGHT MODE — shades of black */
+.graph-cell[data-level="0"] { background: #e2e2e2; }
+.graph-cell[data-level="1"] { background: #b0b0b0; }
+.graph-cell[data-level="2"] { background: #787878; }
+.graph-cell[data-level="3"] { background: #484848; }
+.graph-cell[data-level="4"] { background: #1a1a1a; }
+
+/* DARK MODE — shades of white */
+.dark .graph-cell[data-level="0"] { background: #2a2a2a; }
+.dark .graph-cell[data-level="1"] { background: #525252; }
+.dark .graph-cell[data-level="2"] { background: #7a7a7a; }
+.dark .graph-cell[data-level="3"] { background: #a8a8a8; }
+.dark .graph-cell[data-level="4"] { background: #e5e5e5; }
+
+/* ── Legend ──────────────────────────────────────────────────────────────── */
+
+.graph-legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 14px;
+}
+
+.graph-legend-text {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--text-color);
+  opacity: 0.45;
+  padding: 0 2px;
+}
+
+/* Legend cells reuse .graph-cell data-level colours but aren't interactive */
+.graph-cell.graph-legend-cell {
+  cursor: default;
+  pointer-events: none;
+}
+
+.graph-cell.graph-legend-cell:hover {
+  opacity: 1;
+  outline: none;
+}
+
+/* ── Hover tooltip ───────────────────────────────────────────────────────── */
+
+.graph-tooltip {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+
+  background: var(--text-color);
+  color: var(--bg-color);
+  border-radius: 6px;
+  padding: 7px 11px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+
+  /* Subtle entrance — prevents tooltip from feeling "sticky" */
+  animation: tooltipFadeIn 0.1s ease forwards;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.graph-tooltip-count {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.graph-tooltip-date {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  opacity: 0.72;
+}
+
+/* ── Loading skeleton ────────────────────────────────────────────────────── */
+
+.graph-skeleton-grid {
+  display: flex;
+  gap: 3px;
+  min-width: min-content;
+  margin-left: 32px; /* align with the main grid — same as day-label-spacer */
+}
+
+.graph-skeleton-week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.graph-skeleton-cell {
+  width:  12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--border-color);
+  animation: skeletonPulse 1.6s ease-in-out infinite alternate;
+}
+
+/* Stagger the pulse so adjacent cells don't all blink together */
+.graph-skeleton-week:nth-child(odd) .graph-skeleton-cell {
+  animation-delay: 0.15s;
+}
+.graph-skeleton-week:nth-child(3n) .graph-skeleton-cell {
+  animation-delay: 0.3s;
+}
+
+@keyframes skeletonPulse {
+  from { opacity: 0.25; }
+  to   { opacity: 0.6;  }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+/* Tablet / large mobile — shrink cells slightly and adjust day label */
+@media (max-width: 900px) {
+  .github-graph-section {
+    padding: 36px 24px 44px;
+  }
+}
+
+/* Mobile — smaller cells, scroll the graph horizontally */
+@media (max-width: 640px) {
+  .github-graph-section {
+    padding: 32px 16px 40px;
+  }
+
+  /* Compress header a little on narrow screens */
+  .graph-total-count {
+    font-size: 0.75rem;
+  }
+
+  /* Shrink cells from 12 px → 10 px */
+  .graph-cell {
+    width:  10px;
+    height: 10px;
+  }
+
+  .graph-day-label {
+    height: 10px;
+    line-height: 10px;
+    font-size: 0.55rem;
+  }
+
+  .graph-skeleton-cell {
+    width:  10px;
+    height: 10px;
+  }
+}
+
+/* Very narrow — hide day labels entirely to save space */
+@media (max-width: 380px) {
+  .graph-day-labels {
+    display: none;
+  }
+
+  .graph-day-label-spacer {
+    width: 0;
+  }
+}
