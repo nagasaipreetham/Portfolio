@@ -65,13 +65,16 @@ function App() {
       const element = document.getElementById(hash.slice(1));
       if (element) {
         const timer = setTimeout(() => {
+          // If the element is pinned by GSAP, its parent is the pin-spacer.
+          // Scrolling to the pin-spacer ensures we land at the correct position.
+          const target = element.closest('.pin-spacer') || element;
           // Prefer Lenis smooth scroll when available
           if (window.__lenis) {
-            window.__lenis.scrollTo(element, { offset: -80, duration: 1.2 });
+            window.__lenis.scrollTo(target, { offset: -80, duration: 1.2 });
           } else {
-            element.scrollIntoView({ behavior: 'smooth' });
+            target.scrollIntoView({ behavior: 'smooth' });
           }
-        }, 150);
+        }, 250);
         return () => clearTimeout(timer);
       }
     } else {

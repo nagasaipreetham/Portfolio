@@ -48,9 +48,9 @@ export default function Resume() {
   }, [fetchPdf]);
 
   /* ── Zoom controls ──────────────────────────────────────────── */
-  // Max 150%, min 50%, each step = 1% (smooth)
-  const handleZoomIn  = () => setZoom(prev => Math.min(150, prev + 10));
-  const handleZoomOut = () => setZoom(prev => Math.max(50,  prev - 10));
+  // Max 200%, min 50%, step rounds to next/previous 10% divisible number
+  const handleZoomIn  = () => setZoom(prev => Math.min(200, (Math.floor(prev / 10) + 1) * 10));
+  const handleZoomOut = () => setZoom(prev => Math.max(50,  (Math.ceil(prev / 10) - 1) * 10));
 
   /* ── Reload: reset zoom to 100%, re-fetch image and PDF ─────── */
   const handleReset = () => {
@@ -69,7 +69,7 @@ export default function Resume() {
         e.preventDefault();
         // Each wheel notch = 1%
         const delta = e.deltaY < 0 ? 1 : -1;
-        setZoom(prev => Math.min(150, Math.max(50, prev + delta)));
+        setZoom(prev => Math.min(200, Math.max(50, prev + delta)));
       }
     };
 
@@ -104,7 +104,7 @@ export default function Resume() {
         );
         const factor     = dist / initialDist;
         const targetZoom = Math.round(initialZoom * factor);
-        setZoom(Math.min(150, Math.max(50, targetZoom)));
+        setZoom(Math.min(200, Math.max(50, targetZoom)));
       }
     };
 
@@ -149,7 +149,7 @@ export default function Resume() {
             <button
               className="resume-control-btn"
               onClick={handleZoomIn}
-              disabled={zoom >= 150 || !pdfBlobUrl}
+              disabled={zoom >= 200 || !pdfBlobUrl}
               aria-label="Zoom In"
             >
               <ZoomIn size={15} />
@@ -198,10 +198,10 @@ export default function Resume() {
               className="resume-image-wrapper"
               style={{
                 padding: '40px',
-                /* Each 1% of zoom = 2px extra width beyond the base 100% */
-                width: `calc(100% + ${(zoom - 100) * 2}px)`,
-                maxWidth: 'none',
-                transition: 'width 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
+                /* Each 1% of zoom = 4px extra width beyond the base 100% */
+                width: `calc(100% + ${(zoom - 100) * 4}px)`,
+                maxWidth: `calc(1000px + ${(zoom - 100) * 4}px)`,
+                transition: 'width 0.15s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.15s cubic-bezier(0.4, 0, 0.2, 1)',
               }}
             >
               <img
@@ -209,6 +209,7 @@ export default function Resume() {
                 src={`${IMAGE_URL}?v=${imgKey}`}
                 alt="Preetham Maddula Resume"
                 className="resume-image"
+                style={{ maxWidth: '100%' }}
               />
             </div>
           ) : (
