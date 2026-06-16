@@ -16,6 +16,7 @@ import Contact from './components/Contact';
 import GitHubGraph from './components/GitHubGraph';
 import SkillsScroll from './components/SkillsScroll';
 import Resume from './components/Resume';
+import SectionNavigator from './components/SectionNavigator';
 
 // Register ScrollTrigger once at module level so Works.jsx can also rely on it
 gsap.registerPlugin(ScrollTrigger);
@@ -95,6 +96,7 @@ function App() {
         {/* Homepage Route */}
         <Route path="/" element={
           <>
+            <SectionNavigator />
             {/* ── Constrained centre column (existing sections) ─────── */}
             <div className="layout-container">
               <div className="hero-banner-wrapper">
@@ -162,7 +164,9 @@ function App() {
 
                 <SkillsScroll />
 
-                <GitHubGraph />
+                <div id="footer">
+                  <GitHubGraph />
+                </div>
 
                 <div className="separator-full-width">
                   <Separator />

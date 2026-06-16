@@ -127,7 +127,7 @@ export default function Resume() {
       <div className="resume-page-header">
         <h1 className="resume-page-title">Resume</h1>
         <p className="resume-page-caption">
-          Explore my professional background, technical expertise, and career journey.
+          Explore my professional background, technical expertise, and Achievements.
         </p>
       </div>
 
@@ -215,7 +215,7 @@ export default function Resume() {
           ) : (
             <div className="resume-viewer-loading">
               <div className="resume-spinner"></div>
-              <span>Fetching from Cloud...</span>
+              <span>Loading...</span>
             </div>
           )}
         </div>

@@ -1,0 +1,146 @@
+/* ═══════════════════════════════════════════════════════════════
+   SECTION NAVIGATOR (SIDEBAR MENU)
+   Interactive floating menu on the right edge of the screen
+   ═══════════════════════════════════════════════════════════════ */
+
+.section-navigator {
+  position: fixed;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 260px;
+  height: 320px;
+  z-index: 999;
+  pointer-events: auto;
+  user-select: none;
+  background: transparent;
+  transition: transform 0.3s ease;
+}
+
+/* Hover trigger area optimization */
+.section-navigator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 60px; /* leaves labels clickable when expanded, but limits active area when collapsed */
+  background: transparent;
+  pointer-events: auto;
+  z-index: -1;
+}
+
+.section-navigator.expanded::before {
+  left: 0; /* expand active mouse hover target box to encompass text buttons */
+}
+
+/* SVG Canvas styling */
+.navigator-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Connective lines design */
+.navigator-line {
+  fill: none;
+  stroke: var(--text-color);
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  opacity: 0.18;
+  /* Path Morphing: standard CSS layout transitions the 'd' attribute */
+  transition: 
+    d 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    stroke-width 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.35s ease,
+    stroke 0.3s ease;
+}
+
+/* Dark theme specific tweaking */
+.dark .navigator-line {
+  opacity: 0.12;
+}
+
+/* Highlighted viewport active section line */
+.navigator-line.active {
+  stroke-width: 3.5px;
+  opacity: 0.95;
+}
+
+.dark .navigator-line.active {
+  opacity: 1;
+}
+
+/* Specific line hover status (when user hovers over a single button) */
+.navigator-line.hovered {
+  stroke-width: 3.5px;
+  opacity: 0.95;
+}
+
+/* Label Buttons container & items */
+.navigator-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.navigator-label-btn {
+  position: absolute;
+  right: 32px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: var(--text-color);
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  text-align: right;
+  white-space: nowrap;
+  transition: 
+    top 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    right 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.35s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* Show labels only when menu is expanded */
+.section-navigator.expanded .navigator-label-btn {
+  right: 168px; /* sits aligned to Left X = 100 curve end */
+  opacity: 0.35;
+  pointer-events: auto;
+}
+
+/* Active label styling */
+.section-navigator.expanded .navigator-label-btn.active {
+  opacity: 1;
+  font-weight: 800;
+  text-shadow: 0 0 1px rgba(var(--text-color), 0.2);
+}
+
+/* Specific button hover highlight */
+.section-navigator.expanded .navigator-label-btn.hovered {
+  opacity: 1;
+  color: var(--text-color);
+}
+
+/* Hover/active indicator focus rings (accessibility) */
+.navigator-label-btn:focus-visible {
+  outline: 1.5px solid var(--text-color);
+  border-radius: 4px;
+  opacity: 1;
+}
+
+/* Responsive details: Hide sidebar on tablets and mobile screens for layout cleanliness */
+@media (max-width: 1024px) {
+  .section-navigator {
+    display: none;
+  }
+}

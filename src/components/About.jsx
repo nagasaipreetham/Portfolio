@@ -2,7 +2,7 @@ import './About.css';
 
 export default function About() {
   return (
-    <section className="about-section-container">
+    <section className="about-section-container" id="about">
       {/* Left Column: Thin vertical title bar */}
       <div className="about-left-bar" aria-hidden="true">
         <span className="about-vertical-text">ABOUT</span>

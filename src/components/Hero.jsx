@@ -11,7 +11,7 @@ export default function Hero() {
   const isDark = theme === 'dark';
 
   return (
-    <section className="hero-section">
+    <section className="hero-section" id="hero">
       <div className="hero-content">
         <div className="available-pill">
           <span className="glowing-dot"></span>

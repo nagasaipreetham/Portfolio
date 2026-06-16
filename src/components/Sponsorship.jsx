@@ -10,7 +10,7 @@ export default function Sponsorship() {
   const githubIcon = isDark ? '/github-light.svg' : '/github-dark.svg';
 
   return (
-    <section className="sponsorship-section">
+    <section className="sponsorship-section" id="sponsors">
       <div className="sponsorship-flex-container">
         
         {/* Left Column: Welded Media Block */}
