@@ -764,3 +764,54 @@
     filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.8));
   }
 }
+
+/* ── 3D Engraving/Sculpted Text Markings ──────────────────────────────── */
+.vintage-player-engraved {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 800;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Engraved Text on Light Sand Base (dark theme) */
+.vintage-player.theme-dark .vintage-player-engraved {
+  color: rgba(26, 26, 26, 0.45);
+  text-shadow: 
+    -0.5px -0.5px 1px rgba(0, 0, 0, 0.35),
+    0.5px 0.5px 1px rgba(255, 255, 255, 0.85);
+}
+
+/* Engraved Text on Deep Black Base (light theme) */
+.vintage-player.theme-light .vintage-player-engraved {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 
+    -1px -1px 1px rgba(0, 0, 0, 0.85),
+    1px 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.vintage-player-tonearm-onoff-label {
+  position: absolute;
+  right: 55px; /* aligned with tonearm wrapper */
+  bottom: 30px; /* positioned below the base of the tonearm */
+  width: 40px; /* match base width */
+  text-align: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  line-height: 1;
+}
+
+.vintage-player-knob-label-plus {
+  position: absolute;
+  left: -10px;
+  top: -5px;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.vintage-player-knob-label-minus {
+  position: absolute;
+  right: -10px;
+  top: -5px;
+  font-size: 1.1rem;
+  line-height: 1;
+}

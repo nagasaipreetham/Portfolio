@@ -14,6 +14,7 @@ const VintagePlayer = ({ theme = 'dark' }) => {
   const rotationRef = useRef(null);
   const knobRef = useRef(null);
   const containerRef = useRef(null);
+  const volumeRef = useRef(0.7);
 
   // Sync volume with audio component
   useEffect(() => {
@@ -27,6 +28,12 @@ const VintagePlayer = ({ theme = 'dark' }) => {
     // 1. Force the tonearm to be on the disk instantly by default on mount
     if (tonearmRef.current) {
       gsap.set(tonearmRef.current, { rotation: -15 });
+    }
+
+    // 2. Set the volume knob rotation initially based on default volume state (0.7)
+    if (knobRef.current) {
+      const initialRotation = 0.7 * (324 - 36) + 36;
+      gsap.set(knobRef.current, { rotation: initialRotation });
     }
 
     const audio = audioRef.current;
@@ -175,15 +182,36 @@ const VintagePlayer = ({ theme = 'dark' }) => {
     const centerY = rect.top + rect.height / 2;
 
     const angle = Math.atan2(e.clientY - centerY, e.clientX - centerX);
-    const degrees = angle * (180 / Math.PI) + 90;
-    const normalizedRotation = ((degrees % 360) + 360) % 360;
-    const volumeValue = Math.max(0, Math.min(1, normalizedRotation / 270));
+    let degrees = angle * (180 / Math.PI) + 90;
+    degrees = ((degrees % 360) + 360) % 360;
+
+    let finalRotation = degrees;
+    let volumeValue = 0;
+
+    // Active zone: [36, 324] (clockwise through the bottom)
+    // Dead zone: < 36 or > 324 (top 20% on top)
+    if (degrees < 36 || degrees > 324) {
+      // It's in the dead zone. Snap to nearest boundary stop based on volumeRef.
+      // This forces rotation through the bottom only, preventing jumping across the top.
+      if (volumeRef.current <= 0.5) {
+        finalRotation = 36;
+        volumeValue = 0;
+      } else {
+        finalRotation = 324;
+        volumeValue = 1;
+      }
+    } else {
+      // In active zone [36, 324]
+      finalRotation = degrees;
+      volumeValue = (degrees - 36) / (324 - 36);
+    }
 
     setVolume(volumeValue);
+    volumeRef.current = volumeValue;
     if (audioRef.current) audioRef.current.volume = volumeValue;
 
     gsap.to(knob, {
-      rotation: normalizedRotation,
+      rotation: finalRotation,
       duration: 0.1
     });
   };
@@ -283,9 +311,14 @@ const VintagePlayer = ({ theme = 'dark' }) => {
               </div>
             </div>
           </div>
+          <div className="vintage-player-tonearm-onoff-label vintage-player-engraved">
+            ON/OFF
+          </div>
 
           {/* Control Panel elements positioned directly */}
           <div className="vintage-player-knob-section">
+            <div className="vintage-player-knob-label-plus vintage-player-engraved">+</div>
+            <div className="vintage-player-knob-label-minus vintage-player-engraved">-</div>
             <div
               ref={knobRef}
               className="vintage-player-knob"
