@@ -7,9 +7,20 @@
   background: #f2efeb; /* matched to portfolio light background */
 }
 
+/* Base wrapper to handle layout dimensions and animations for scaling */
+.vintage-light-base-wrapper {
+  position: relative;
+  width: 380px;
+  height: 480px;
+  flex-shrink: 0;
+  animation: vintageLightAppear 1s ease-out;
+}
+
 /* Base casing styled to look like a heavy, solid chamfered slab of matte composite/brushed material */
 .vintage-light-base {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 380px; /* kept exact size */
   height: 480px; /* kept exact size */
   background: linear-gradient(145deg, #232328 0%, #15151a 50%, #0b0b0f 100%); /* Deep rich black base */
@@ -21,9 +32,9 @@
     inset 0 3px 5px rgba(255, 255, 255, 0.08), /* Upper highlight edge */
     inset 0 -4px 8px rgba(0, 0, 0, 0.6);       /* Lower recessed edge shadow */
   padding: 40px;
-  animation: vintageLightAppear 1s ease-out;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.02);
+  transform-origin: top left;
 }
 
 @keyframes vintageLightAppear {
@@ -443,46 +454,5 @@
   50% { 
     opacity: 0.85; 
     filter: drop-shadow(0 0 6px rgba(124, 58, 237, 0.8));
-  }
-}
-
-/* Responsive constraints maintained */
-@media (max-width: 768px) {
-  .vintage-light-base {
-    width: 95vw;
-    max-width: 380px;
-    height: 420px;
-    padding: 20px;
-  }
-
-  .vintage-light-vinyl-wrapper {
-    width: 240px;
-    height: 240px;
-    top: 20px;
-    left: calc((100% - 240px) / 2);
-  }
-
-  .vintage-light-knob-section {
-    left: 30px;
-    bottom: 25px;
-  }
-  
-  .vintage-light-knob {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .vintage-light-knob-center {
-    width: 34px;
-    height: 34px;
-  }
-
-  .vintage-light-tonearm-wrapper {
-    right: 30px;
-    bottom: 45px;
-  }
-
-  .vintage-light-led-section {
-    bottom: 45px;
   }
 }

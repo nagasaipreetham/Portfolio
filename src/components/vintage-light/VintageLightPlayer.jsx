@@ -6,12 +6,33 @@ const VintageLightPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [volume, setVolume] = useState(0.7);
   const [isDraggingKnob, setIsDraggingKnob] = useState(false);
+  const [scale, setScale] = useState(1);
 
   const audioRef = useRef(null);
   const vinylRef = useRef(null);
   const tonearmRef = useRef(null);
   const rotationRef = useRef(null);
   const knobRef = useRef(null);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const width = entry.contentRect.width;
+        if (width < 380) {
+          setScale(width / 380);
+        } else {
+          setScale(1);
+        }
+      }
+    });
+
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, []);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -114,82 +135,96 @@ const VintageLightPlayer = () => {
   }, [isDraggingKnob]);
 
   return (
-    <div className="vintage-light-player">
-      <div className="vintage-light-base">
-        {/* Wood Texture Overlay */}
-        <div className="vintage-light-wood-texture" />
+    <div ref={containerRef} className="vintage-light-player">
+      <div
+        className="vintage-light-base-wrapper"
+        style={{
+          width: `${380 * scale}px`,
+          height: `${480 * scale}px`,
+        }}
+      >
+        <div
+          className="vintage-light-base"
+          style={{
+            transform: `scale(${scale})`,
+            transformOrigin: 'center center',
+          }}
+        >
+          {/* Wood Texture Overlay */}
+          <div className="vintage-light-wood-texture" />
 
-        {/* Corner Screws */}
-        <div className="vintage-light-screw vintage-light-screw-tl" />
-        <div className="vintage-light-screw vintage-light-screw-tr" />
-        <div className="vintage-light-screw vintage-light-screw-bl" />
-        <div className="vintage-light-screw vintage-light-screw-br" />
+          {/* Corner Screws */}
+          <div className="vintage-light-screw vintage-light-screw-tl" />
+          <div className="vintage-light-screw vintage-light-screw-tr" />
+          <div className="vintage-light-screw vintage-light-screw-bl" />
+          <div className="vintage-light-screw vintage-light-screw-br" />
 
-        {/* Vinyl Record */}
-        <div className="vintage-light-vinyl-wrapper">
-          <div ref={vinylRef} className="vintage-light-vinyl">
-            <div className="vintage-light-grooves" />
-            <div className="vintage-light-reflection" />
-            <div className="vintage-light-center-label">
-              {/* Album Art (Tilted to the right a little bit) */}
-              <div className="vintage-light-album-art">
-                <img
-                  src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=400&h=400&fit=crop"
-                  alt="Album"
-                />
+          {/* Vinyl Record */}
+          <div className="vintage-light-vinyl-wrapper">
+            <div ref={vinylRef} className="vintage-light-vinyl">
+              <div className="vintage-light-grooves" />
+              <div className="vintage-light-reflection" />
+              <div className="vintage-light-center-label">
+                {/* Album Art (Tilted to the right a little bit) */}
+                <div className="vintage-light-album-art">
+                  <img
+                    src="https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=400&h=400&fit=crop"
+                    alt="Album"
+                  />
+                </div>
+                <div className="vintage-light-spindle" />
               </div>
-              <div className="vintage-light-spindle" />
             </div>
           </div>
-        </div>
 
-        {/* Tonearm Wrapper */}
-        <div className="vintage-light-tonearm-wrapper">
-          <div
-            ref={tonearmRef}
-            className="vintage-light-tonearm"
-            onClick={handleTonearmClick}
-          >
-            <div className="vintage-light-arm-base" />
-            <div className="vintage-light-arm-structure">
-              <svg className="vintage-light-arm-svg" width="300" height="80" viewBox="0 0 300 80">
-                <defs>
-                  <linearGradient id="pipe-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#d1d5db" />
-                    <stop offset="50%" stopColor="#9ca3af" />
-                    <stop offset="100%" stopColor="#4b5563" />
-                  </linearGradient>
-                </defs>
-                <path 
-                  d="M 20,40 L 155,40 L 270,12" 
-                  fill="none" 
-                  stroke="url(#pipe-grad)" 
-                  strokeWidth="5" 
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <div className="vintage-light-arm-connector" style={{ left: '11px', top: '31px' }} />
-              <div className="vintage-light-arm-head" style={{ left: '260px', top: '2px' }} />
+          {/* Tonearm Wrapper */}
+          <div className="vintage-light-tonearm-wrapper">
+            <div
+              ref={tonearmRef}
+              className="vintage-light-tonearm"
+              onClick={handleTonearmClick}
+            >
+              <div className="vintage-light-arm-base" />
+              <div className="vintage-light-arm-structure">
+                <svg className="vintage-light-arm-svg" width="300" height="80" viewBox="0 0 300 80">
+                  <defs>
+                    <linearGradient id="pipe-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#d1d5db" />
+                      <stop offset="50%" stopColor="#9ca3af" />
+                      <stop offset="100%" stopColor="#4b5563" />
+                    </linearGradient>
+                  </defs>
+                  <path 
+                    d="M 20,40 L 155,40 L 270,12" 
+                    fill="none" 
+                    stroke="url(#pipe-grad)" 
+                    strokeWidth="5" 
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <div className="vintage-light-arm-connector" style={{ left: '11px', top: '31px' }} />
+                <div className="vintage-light-arm-head" style={{ left: '260px', top: '2px' }} />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Control Panel elements positioned directly */}
-        <div className="vintage-light-knob-section">
-          <div
-            ref={knobRef}
-            className="vintage-light-knob"
-            onMouseDown={handleKnobMouseDown}
-          >
-            <div className="vintage-light-knob-center">
-              <div className="vintage-light-knob-indicator" />
+          {/* Control Panel elements positioned directly */}
+          <div className="vintage-light-knob-section">
+            <div
+              ref={knobRef}
+              className="vintage-light-knob"
+              onMouseDown={handleKnobMouseDown}
+            >
+              <div className="vintage-light-knob-center">
+                <div className="vintage-light-knob-indicator" />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="vintage-light-led-section">
-          <div className={`vintage-light-led ${isPlaying ? 'active' : ''}`} />
+          <div className="vintage-light-led-section">
+            <div className={`vintage-light-led ${isPlaying ? 'active' : ''}`} />
+          </div>
         </div>
       </div>
 
