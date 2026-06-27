@@ -56,6 +56,17 @@ const PROJECTS = [
   },
 ];
 
+const GRID_ROWS = 11;
+const GRID_COLS = 19;
+const TOTAL_CELLS = GRID_ROWS * GRID_COLS;
+
+const DIGIT_PATTERNS = {
+  '01': [105, 106, 123, 126, 142, 145, 161, 164, 180, 181, 111, 129, 130, 147, 149, 168, 187],
+  '02': [105, 106, 123, 126, 142, 145, 161, 164, 180, 181, 109, 110, 111, 112, 131, 148, 149, 150, 166, 185, 186, 187, 188],
+  '03': [105, 106, 123, 126, 142, 145, 161, 164, 180, 181, 109, 110, 111, 131, 148, 149, 169, 185, 186, 187],
+  '04': [105, 106, 123, 126, 142, 145, 161, 164, 180, 181, 111, 129, 147, 150, 166, 167, 168, 169, 187],
+};
+
 export default function Works() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -75,6 +86,7 @@ export default function Works() {
     boxShadow: isDark
       ? '0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 -1px 0 rgba(255, 255, 255, 0.05), inset 0 0 20px 10px rgba(255, 255, 255, 0.04)'
       : '0 8px 32px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(255, 255, 255, 0.1), inset 0 0 20px 10px rgba(255, 255, 255, 0.15)',
+    border: isDark ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(0, 0, 0, 0.08)',
   };
 
   useLayoutEffect(() => {
@@ -327,11 +339,17 @@ export default function Works() {
             >
               <div className="project-card-inner" style={glassStyle}>
                 <div className="card-visual">
-                  <div className="card-glow" />
-                  <div className="card-grid" />
-                  <span className="card-bg-number" aria-hidden="true">
-                    {project.id}
-                  </span>
+                  <div className="card-grid-container">
+                    {Array.from({ length: TOTAL_CELLS }).map((_, i) => {
+                      const isHighlighted = DIGIT_PATTERNS[project.id]?.includes(i);
+                      return (
+                        <div
+                          key={i}
+                          className={`grid-cell ${isHighlighted ? 'highlighted' : ''}`}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
 
                 <div className="card-body">
