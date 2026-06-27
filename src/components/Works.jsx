@@ -12,53 +12,47 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 const PROJECTS = [
   {
     id: '01',
-    name: 'Zerion',
-    tagline: 'Analytics Dashboard',
+    name: 'Poket Snippet',
+    tagline: 'Web Application',
     description:
-      'Real-time data visualization platform with AI-powered insights, customizable widgets, and live reporting modules.',
-    stack: ['React', 'Node.js', 'MongoDB', 'WebSocket'],
-    year: '2024',
+      'A smart web app for programmers to organize and practice coding. Compiles code in 38 languages, offers AI assistance (auto-complete, bug detection, chatbot), suggests LeetCode problems, and features a collaborative canvas with cloud sync.',
+    stack: ['Node JS', 'React JS', 'Express JS', 'MongoDB', 'Virtual Machine', 'Cloudflare R2', 'JavaScript', 'CSS', 'HTML'],
+    year: '2025',
     hue: '230',
+    link: 'https://poket-snippet.onrender.com/',
   },
   {
     id: '02',
-    name: 'NeoCommerce',
-    tagline: 'E-Commerce Platform',
+    name: 'Neetcode Frontend',
+    tagline: 'Landing Page Redesign',
     description:
-      'Scalable storefront builder with seamless checkout flow, inventory management system, and multi-theme support.',
-    stack: ['Next.js', 'Express', 'PostgreSQL', 'Stripe'],
-    year: '2024',
-    hue: '160',
+      'Redesigned and rebuilt the landing page and key subpages of NeetCode to fix outdated UI, poor space usage, and weak user experience by creating a cleaner layout, improving visuals, adding smooth animations, and ensuring better mobile responsiveness using React.',
+    stack: ['HTML', 'CSS', 'JavaScript', 'React'],
+    year: '2026',
+    hue: '145',
+    link: 'https://neetcodeui.netlify.app/',
   },
   {
     id: '03',
-    name: 'Cortex AI',
-    tagline: 'AI Writing Assistant',
+    name: 'Code Detector',
+    tagline: 'Web Extension',
     description:
-      'Distraction-free editor with GPT-4 integration, smart auto-complete, real-time suggestions, and voice input.',
-    stack: ['React', 'Python', 'OpenAI API', 'FastAPI'],
-    year: '2023',
+      'Capture any code snippet from a YouTube video and instantly convert it into editable code using AI vision.',
+    stack: ['HTML', 'CSS', 'JS', 'manifest.json'],
+    year: '2025',
     hue: '40',
+    link: 'https://chromewebstore.google.com/detail/code-detector/fipjonedlkbnklmogejjppbmflnppikj?hl=en-US&utm_source=ext_sidebar&pli=1',
   },
   {
     id: '04',
-    name: 'Flowcast',
-    tagline: 'Collaborative Whiteboard',
+    name: 'ViewMax',
+    tagline: 'Web Extension',
     description:
-      'Infinite canvas with real-time multi-cursor syncing, shape recognition, and one-click diagram export.',
-    stack: ['React', 'Socket.io', 'Canvas API', 'Node.js'],
-    year: '2023',
+      'ViewMax is a Chrome extension that makes YouTube clean and distraction-free. The extension has a main toggle that helps in making video occupy the whole webpage and a micro-toggle to normalize the webpage. It hides comments and recommendations and keeps the video fully functional on all screen sizes.',
+    stack: ['HTML', 'CSS', 'JS', 'manifest.json'],
+    year: '2025',
     hue: '310',
-  },
-  {
-    id: '05',
-    name: 'Beacon CMS',
-    tagline: 'Headless Content Platform',
-    description:
-      'Visual page builder with multi-site support, API-first architecture, role-based access, and global CDN delivery.',
-    stack: ['React', 'GraphQL', 'MongoDB', 'Cloudflare'],
-    year: '2023',
-    hue: '265',
+    link: 'https://chromewebstore.google.com/detail/viewmax/gicffakbgdniebbojadlmegdkpdmpfeo?utm_source=item-share-cb',
   },
 ];
 
@@ -321,7 +315,7 @@ export default function Works() {
 
         <div className="gallery-meta">
           <span className="gallery-label">SELECTED WORKS</span>
-          <span className="gallery-count">05 PROJECTS</span>
+          <span className="gallery-count">04 PROJECTS</span>
         </div>
 
         <div className="gallery-track" ref={galleryTrackRef}>
@@ -359,7 +353,9 @@ export default function Works() {
                       ))}
                     </div>
                     <a
-                      href="#"
+                      href={project.link || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="card-arrow"
                       aria-label={`View ${project.name} project`}
                     >

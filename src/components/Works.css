@@ -326,7 +326,7 @@
   padding: 22px 24px 24px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .card-header {
@@ -385,7 +385,7 @@
   text-transform: uppercase;
   /* Uses the card's accent hue */
   color: hsla(var(--card-hue), 75%, 45%, 0.9);
-  margin: 0 0 6px;
+  margin: 0;
 }
 
 .dark .card-tagline {
@@ -394,7 +394,7 @@
 
 .card-desc {
   font-size: 0.82rem;
-  line-height: 1.65;
+  line-height: 1.5;
   color: #000000;
   margin: 0;
 }
@@ -406,7 +406,7 @@
 /* Card Bottom Row */
 .card-bottom {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
 }
