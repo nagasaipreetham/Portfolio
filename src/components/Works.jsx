@@ -16,7 +16,7 @@ const PROJECTS = [
     tagline: 'Web Application',
     description:
       'A smart web app for programmers to organize and practice coding. Compiles code in 38 languages, offers AI assistance (auto-complete, bug detection, chatbot), suggests LeetCode problems, and features a collaborative canvas with cloud sync.',
-    stack: ['Node JS', 'React JS', 'Express JS', 'MongoDB', 'Virtual Machine', 'Cloudflare R2', 'JavaScript', 'CSS', 'HTML'],
+    stack: ['Node JS', 'React JS','HTML', 'Express JS', 'MongoDB', 'CSS', 'Virtual Machine', 'JavaScript'],
     year: '2025',
     hue: '230',
     link: 'https://poket-snippet.onrender.com/',
