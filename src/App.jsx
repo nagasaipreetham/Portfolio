@@ -19,6 +19,7 @@ import Resume from './components/Resume';
 import SectionNavigator from './components/SectionNavigator';
 import FloatingBottomMenu from './components/FloatingBottomMenu';
 import VintagePlayer from './components/vintage-player/VintagePlayer';
+import StarEffect from './components/StarEffect';
 import { useTheme } from './context/ThemeContext';
 
 // Register ScrollTrigger once at module level so Works.jsx can also rely on it
@@ -106,6 +107,7 @@ function App() {
             <div className="layout-container">
               <div className="hero-banner-wrapper">
                 <img src="/banner.png" alt="Hero background" className="hero-banner-img" />
+                {theme === 'dark' && <StarEffect />}
                 <div className="hero-banner-fade"></div>
               </div>
 
